@@ -23,6 +23,7 @@ func main() {
 	e.Use(middleware.CORS())
 	e.GET("/messages", homeHandler)
 	e.POST("/messages", postMessage)
+	e.GET("/all", getAllMessages)
 	e.Logger.Fatal(e.Start(":3000"))
 }
 
@@ -56,4 +57,11 @@ func getRandomMessage(currentId string) (*Message, error) {
 		}
 	}
 	return &Message{}, errors.New("Error, there are no messages registered")
+}
+func getAllMessages(c echo.Context) error {
+	var allMessages []Message
+	for _, value := range messages {
+		allMessages = append(allMessages, value)
+	}
+	return c.JSON(http.StatusOK, allMessages)
 }
